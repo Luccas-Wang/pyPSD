@@ -32,12 +32,15 @@ class FrequencyUtility:
 
             return array
 
-    def write_data(self, outputFileName, data):
+    def write_data(self, outputFileName, pxx, frequencies):
         with open(outputFileName, "w") as outs:
             i = 0
-            for item in data:
-                outs.write(item)
+            size = pxx.size
 
+            for x in range(0, size):
+                outputLine = str(frequencies[x]) + '|' + str(pxx[x]) + '\r\n'
+
+                outs.write(outputLine)
         return
 
     def process_psd(self, data, nfft=1024, audio_sampling_rate=96000):
@@ -78,7 +81,7 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
     except getopt.GetoptError:
-        print('test.py -i <inputfile> -o <outputfile>')
+        print('PowerSpectrumDensityProcessor.py -i <inputfile> -o <outputfile>')
         sys.exit(2)
 
     for opt, arg in opts:
@@ -92,8 +95,10 @@ def main(argv):
 
     freqUtil = FrequencyUtility()
     inputData = freqUtil.load_data(inputfile)
-    outputData = freqUtil.process_psd(inputData, 1024, len(inputData))
-    freqUtil.write_data(outputfile)
+
+    pxx, frequencies = freqUtil.process_psd(inputData, 1024, len(inputData))
+
+    freqUtil.write_data(outputfile, pxx, frequencies)
 
 if __name__ == "__main__":
    main(sys.argv[1:])

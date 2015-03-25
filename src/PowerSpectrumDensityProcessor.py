@@ -37,7 +37,7 @@ class FrequencyUtility:
             i = 0
             for item in data:
                 outs.write(item)
-        
+
         return
 
     def process_psd(self, data, nfft=1024, audio_sampling_rate=96000):
